@@ -1,4 +1,4 @@
-const token = process.env.BOT_TOKEN || 'SECRET DO BOT QUE NAO VOU SUBIR NO GIT';
+const token = process.env.CHORAO_BOT_TOKEN || 'SECRET DO BOT QUE NAO VOU SUBIR NO GIT';
 
 const Discord = require('discord.js');
 const bot = new Discord.Client()
