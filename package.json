@@ -1,0 +1,11 @@
+{
+  "name": "ChoraoDiscordBot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/abnerfs/ChoraoDiscordBot",
+  "author": "abnerfs <abnerfs@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^11.5.1"
+  }
+}
