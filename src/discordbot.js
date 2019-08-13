@@ -65,7 +65,7 @@ bot.on('message', msg => {
     const isMentioned = msg.isMentioned(bot.user.id);
     
     if(isMentioned && message.indexOf("!toca") > -1) {
-        msg.channel.send(`-play ${getMusic()}`);
+        msg.channel.send(`${getMusic()}`);
         return;
     }
 
