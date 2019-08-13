@@ -1,8 +1,9 @@
 
 const answersMention = [
     `Eai #author#`,
-    `Bora andar de skafe #author#`,
-    `Tamo junto #author#`
+    `Bora andar de skate #author#`,
+    `Tamo junto #author#`,
+    `Se cheirar melhora #author#`
 ]
 
 const delayedMessages = [
