@@ -83,12 +83,6 @@ const handleMessage = (message, author, mentioned) => {
         return response.replaceAll('#author#', author);
 
     return;
-
-    // if(!PREFIX || message.startsWith(PREFIX)) {
-    //     if(mentioned) {
-
-    //     }
-    // }
 }
 
 module.exports = {

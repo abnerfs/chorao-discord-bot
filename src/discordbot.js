@@ -12,16 +12,17 @@ bot.login(token)
 
 
 bot.on('ready', () => {
+    bot.user.setStatus('away');
+    bot.user.setGame("Skate");
     log(`Logged in as ${bot.user.tag}!`);
 });
 
 
 messageInterval(msgSend => {
     function handleError(ch, err) {
-        let indexChannel = channels.findIndex(x => x.id === ch.id);
-        if(indexChannel > -1)   
-            channels.splice(indexChannel, 1);
-
+        let index = channels.indexOf(ch);
+        if(index > -1)
+            channels.splice(index, 1);
         log(err);
     }
 
@@ -30,6 +31,10 @@ messageInterval(msgSend => {
             channel
                 .send(msgSend)
                 .catch(err => handleError(channel, err));
+
+            let index = channels.indexOf(channel);
+            if(index > -1)
+                channels.splice(index, 0);
         }
         catch(err) {
             handleError(channel, err);

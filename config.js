@@ -3,5 +3,5 @@ module.exports = {
         token: ''
     },
     prefix: '', //No prefix
-    messagesInterval: 4 //Minutes
+    messagesInterval: 1 //Minutes
 }
