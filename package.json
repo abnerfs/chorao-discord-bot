@@ -6,6 +6,7 @@
   "author": "abnerfs <abnerfs@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^11.5.1"
+    "discord.js": "^11.5.1",
+    "random-number": "^0.0.9"
   }
 }

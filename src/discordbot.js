@@ -1,0 +1,86 @@
+const config = require('../config');
+const Discord = require('discord.js');
+const bot = new Discord.Client();
+
+const { log, handleMessage, messageInterval } = require('../src/controller');
+
+const channels = [];
+
+const token = process.env.CHORAO_BOT_TOKEN || config.keys.token || 'SECRET DO BOT QUE NAO VOU SUBIR NO GIT';
+
+bot.login(token)
+
+
+bot.on('ready', () => {
+    log(`Logged in as ${bot.user.tag}!`);
+});
+
+
+messageInterval(msgSend => {
+    function handleError(ch, err) {
+        let indexChannel = channels.findIndex(x => x.id === ch.id);
+        if(indexChannel > -1)   
+            channels.splice(indexChannel, 1);
+
+        log(err);
+    }
+
+    for(const channel of channels) {
+        try  {
+            channel
+                .send(msgSend)
+                .catch(err => handleError(channel, err));
+        }
+        catch(err) {
+            handleError(channel, err);
+        }
+    }
+})
+
+  
+bot.on('message', msg => {
+    const author = msg.author.id;
+
+    if(author === bot.user.id)
+        return;
+
+    const channel = msg.channel;
+    let indexChannel = channels.findIndex(x => x.id === channel.id);
+    if(indexChannel === -1) {
+        channels.push(channel);
+    }
+
+    const message = msg.content;
+    const authorMention = `<@${author}>`;
+
+    const response = handleMessage(message, authorMention,  msg.isMentioned(bot.user.id));
+    if(response)
+        msg.channel.send(response);
+
+    // if (message.substring(0, 1) == '!') {
+    //     let args = message.substring(1).split(' ');
+
+    //     const cmd = args[0];
+    //     const steamid = args[1];
+                
+    //     args = args.splice(1);
+    //     switch(cmd) {
+    //         case 'chorao':
+    //             msg.channel.send("Eai")
+    //         break;
+    //     }
+    // }
+});
+
+
+//joined a server
+bot.on("guildCreate", guild => {
+    log("Joined a new guild: " + guild.name);
+})
+
+//removed from a server
+bot.on("guildDelete", guild => {
+    log("Left a guild: " + guild.name);
+})
+
+module.exports = bot;
