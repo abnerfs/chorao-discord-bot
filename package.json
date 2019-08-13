@@ -7,9 +7,10 @@
   "license": "MIT",
   "dependencies": {
     "discord.js": "^11.5.1",
+    "express": "^4.17.1",
     "random-number": "^0.0.9"
   },
-  "scripts" : {
-    "start" : "node app"
+  "scripts": {
+    "start": "node app"
   }
 }
