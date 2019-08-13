@@ -2,7 +2,7 @@ const config = require('../config');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
-const { log, handleMessage, messageInterval } = require('../src/controller');
+const { log, handleMessage, messageInterval, getMusic } = require('../src/controller');
 
 const channels = [];
 
@@ -46,6 +46,7 @@ messageInterval(msgSend => {
     channels.splice(0, channels.length);
 })
 
+
   
 bot.on('message', msg => {
     const author = msg.author.id;
@@ -61,8 +62,14 @@ bot.on('message', msg => {
 
     const message = msg.content;
     const authorMention = `<@${author}>`;
+    const isMentioned = msg.isMentioned(bot.user.id);
+    
+    if(isMentioned && message.indexOf("!toca") > -1) {
+        msg.channel.send(`!play ${getMusic()}`);
+        return;
+    }
 
-    const response = handleMessage(message, authorMention,  msg.isMentioned(bot.user.id));
+    const response = handleMessage(message, authorMention, isMentioned);
     if(response)
         msg.channel.send(response);
 

@@ -1,7 +1,7 @@
 const random = require('random-number');
 
 const  { messagesInterval } = require('../config');
-const { delayedMessages, answersMention } = require('./frases');
+const { delayedMessages, answersMention, musics } = require('./frases');
 
 /**
  * @param {string} search
@@ -40,6 +40,7 @@ function getRandomMessage(arr, arrOriginal) {
 
 let arrDelayed = delayedMessages.slice(0);
 let arrMentions = answersMention.slice(0);
+let arrMusics = musics.slice(0);
 
 function queueMsg(index, arr, arrOriginal) {
     let msgSend = arr.splice(index, 1)[0];
@@ -51,6 +52,10 @@ function queueMsg(index, arr, arrOriginal) {
     return  msgSend;
 }
 
+
+function getMusic() {
+    return "Charlie Brown Jr. - " + getRandomMessage(arrMusics, musics);
+}
 
 const messageInterval = (sendMessage) => {
 
@@ -88,5 +93,6 @@ const handleMessage = (message, author, mentioned) => {
 module.exports = {
     handleMessage,
     log,
-    messageInterval
+    messageInterval,
+    getMusic
 }
