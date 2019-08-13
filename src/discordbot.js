@@ -49,9 +49,9 @@ messageInterval(msgSend => {
 
   
 bot.on('message', msg => {
-    const author = msg.author.id;
+    const author = msg.author;
     
-    if(author.user.bot || author === bot.user.id)
+    if(author.bot || author.id === bot.user.id)
         return;
 
     const channel = msg.channel;
@@ -61,7 +61,7 @@ bot.on('message', msg => {
     }
 
     const message = msg.content;
-    const authorMention = `<@${author}>`;
+    const authorMention = `<@${author.id}>`;
     const isMentioned = msg.isMentioned(bot.user.id);
     
     if(isMentioned && message.indexOf("!toca") > -1) {
