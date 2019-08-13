@@ -12,8 +12,10 @@ bot.login(token)
 
 
 bot.on('ready', () => {
-    bot.user.setStatus('away');
-    bot.user.setGame("Skate");
+    bot.user.setStatus('idle');
+    bot.user.setActivity("Skate", {
+        type: "PLAYING"
+    });
     log(`Logged in as ${bot.user.tag}!`);
 });
 
