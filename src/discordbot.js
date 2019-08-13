@@ -50,8 +50,8 @@ messageInterval(msgSend => {
   
 bot.on('message', msg => {
     const author = msg.author.id;
-
-    if(author === bot.user.id)
+    
+    if(author.user.bot || author === bot.user.id)
         return;
 
     const channel = msg.channel;
@@ -65,7 +65,7 @@ bot.on('message', msg => {
     const isMentioned = msg.isMentioned(bot.user.id);
     
     if(isMentioned && message.indexOf("!toca") > -1) {
-        msg.channel.send(`!play ${getMusic()}`);
+        msg.channel.send(`$play ${getMusic()}`);
         return;
     }
 
