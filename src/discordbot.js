@@ -22,9 +22,9 @@ bot.on('ready', () => {
 
 messageInterval(msgSend => {
     function handleError(ch, err) {
-        let index = channels.indexOf(ch);
-        if(index > -1)
-            channels.splice(index, 1);
+        // let index = channels.indexOf(ch);
+        // if(index > -1)
+        //     channels.splice(index, 1);
         log(err);
     }
 
@@ -34,14 +34,16 @@ messageInterval(msgSend => {
                 .send(msgSend)
                 .catch(err => handleError(channel, err));
 
-            let index = channels.indexOf(channel);
-            if(index > -1)
-                channels.splice(index, 0);
+            // let index = channels.indexOf(channel);
+            // if(index > -1)
+            //     channels.splice(index, 0);
         }
         catch(err) {
             handleError(channel, err);
         }
     }
+
+    channels.splice(0, channels.length);
 })
 
   
