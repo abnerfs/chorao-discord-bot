@@ -88,17 +88,19 @@ const playMusic = async (message, authorMention) => {
     if(playStatus.playing) 
         return message.channel.send(`${authorMention} Ja ta tocando música`);
 
-    const connection = await voiceChannel.join();
-    playStatus.connection = connection;
+    
     playStatus.playing = true;
     playStatus.channel = message.channel;
 
-    play(connection, message.channel, voiceChannel, authorMention);
+    play(message.channel, voiceChannel, authorMention);
 
 }
 
 
-const play = async (connection, channel, voiceChannel, authorMention) => {
+const play = async (channel, voiceChannel, authorMention) => {
+    const connection = await voiceChannel.join();
+    playStatus.connection = connection;
+
     const randomMusic = getMusic();
 
     let url = await searchYT(randomMusic);
@@ -117,12 +119,12 @@ const play = async (connection, channel, voiceChannel, authorMention) => {
 
     channel.send(`To tocando ${songInfo.title}`)
     
-	const dispatcher = connection.playStream(ytdl(song.url))
+	const dispatcher = connection.playStream( ytdl(url, { filter: 'audioonly' }))
         .on('end', () => {
             log('Music ended!');
             voiceChannel.leave();
             if(playStatus.playing)
-                play(connection, channel, voiceChannel, authorMention);
+                play(channel, voiceChannel, authorMention);
         })
         .on('error', error => {
             log(error);
