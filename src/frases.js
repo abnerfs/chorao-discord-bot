@@ -7,7 +7,7 @@ const answersMention = [
 ]
 
 const delayedMessages = [
-    `Eu vou fazer um Skate que ela não vai esquecer`,
+    `Eu vou fazer um skate que ela não vai esquecer`,
     `Do pó nois veio no pó nóis vai`,
     'eu tô sempre na área',
     'só os loco sabem',
@@ -24,7 +24,8 @@ const delayedMessages = [
     'mina linda eu quero morar na sua rua',
     'mas que preguiça boa',
     'eu sou o bicho',
-    '🤙🏻'
+    '🤙🏻',
+    'não é porque eu ando de maconha que eu fumo skate',
 ]
 
 const musics = [

@@ -85,7 +85,7 @@ const handleMessage = (message, author, mentioned) => {
 
     const response = getRandomMessage(arrMentions, answersMention);
     if(response)
-        return response.replaceAll('#author#', author);
+        return '🛹 ' + response.replaceAll('#author#', author);
 
     return;
 }

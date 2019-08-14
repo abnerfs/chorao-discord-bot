@@ -1,4 +1,4 @@
-const { keys, prefix } = require('../config');
+const { keys, prefix, music } = require('../config');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 const ytdl = require('ytdl-core');
@@ -8,18 +8,9 @@ const { log, handleMessage, messageInterval, getMusic } = require('../src/contro
 
 const channels = [];
 
-const token = process.env.CHORAO_BOT_TOKEN || keys.token || 'SECRET DO BOT QUE NAO VOU SUBIR NO GIT';
+bot.login(keys.token )
 
-bot.login(token)
-
-
-bot.on('ready', () => {
-    bot.user.setStatus('dnd');
-    bot.user.setActivity("Cheirando Skate", {
-        type: "PLAYING"
-    });
-    log(`Logged in as ${bot.user.tag}!`);
-});
+//set path=%path%;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin
 
 
 messageInterval(msgSend => {
@@ -117,7 +108,7 @@ const play = async (channel, voiceChannel, authorMention) => {
     
     playStatus.song = song;
 
-    channel.send(`To tocando ${songInfo.title}`)
+    channel.send(`To tocando 🎵 ${songInfo.title}`)
     
 	const dispatcher = connection.playStream( ytdl(url, { filter: 'audioonly' }))
         .on('end', () => {
@@ -134,6 +125,14 @@ const play = async (channel, voiceChannel, authorMention) => {
 
     return dispatcher;
 }
+
+bot.on('ready', () => {
+    bot.user.setStatus('dnd');
+    bot.user.setActivity("🛹 Cheirando Skate", {
+        type: "PLAYING"
+    });
+    log(`Logged in as ${bot.user.tag}!`);
+});
 
 
 bot.on('message', msg => {
@@ -152,15 +151,17 @@ bot.on('message', msg => {
 
     const authorMention = `<@${author.id}>`;
 
-    if (message.startsWith(`${prefix}play`)) {
-        playMusic(msg, authorMention);
-        return;
-    }
-    else if(message.startsWith(`${prefix}stop`)) {
-        stopMusic(msg, authorMention);
-    }
-    else if(message.startsWith(`${prefix}skip`)) {
-        skipMusic(msg, authorMention);
+    if(music) {
+        if (message.startsWith(`${prefix}play`)) {
+            playMusic(msg, authorMention);
+            return;
+        }
+        else if(message.startsWith(`${prefix}stop`)) {
+            stopMusic(msg, authorMention);
+        }
+        else if(message.startsWith(`${prefix}skip`)) {
+            skipMusic(msg, authorMention);
+        }
     }
 
     const response = handleMessage(message, authorMention, isMentioned);
