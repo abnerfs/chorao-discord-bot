@@ -30,7 +30,16 @@ const delayedMessages = [
 
 const musics = [
     "Só os loucos sabem",
-    "Como tudo deve ser"
+    "Como tudo deve ser",
+    "Céu Azul",
+    "Zóio de Lula",
+    "Meu Novo Mundo",
+    "Pontes Indestrutíveis",
+    "Ela Vai Voltar (Todos os Defeitos de Uma Mulher Perfeita)",
+    "Lutar Pelo Que É Meu",
+    "Tudo Que Ela Gosta de Escutar",
+    "Um Dia a Gente Se Encontra",
+    "Não Uso Sapato",
 ]
 
 /*
