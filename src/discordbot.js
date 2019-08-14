@@ -142,6 +142,7 @@ const play = async (guild, channel, voiceChannel, authorMention, sendMsg) => {
     };
     
     playStatus[guild.id].song = song;
+    playStatus[guild.id].playing = true;
 
     if(sendMsg)
         playingMsg(channel, song.title);

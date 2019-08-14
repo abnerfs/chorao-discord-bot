@@ -1,6 +1,6 @@
 module.exports = {
     keys: {
-        token: '' || process.env.CHORAO_BOT_TOKEN
+        token: 'NjA4Njk1MTUwMDcxNTEzMDg4.XVQQsw.x6UMlMjMuAO-R8gqUoc6wgP3Tgw' || process.env.CHORAO_BOT_TOKEN
     },
     prefix: 'ch!', //No prefix
     messagesInterval: 1, //Minutes
