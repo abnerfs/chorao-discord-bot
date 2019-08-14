@@ -27,6 +27,12 @@ const delayedMessages = [
     '🤙🏻'
 ]
 
+const musics = [
+    "Só os loucos sabem",
+    "Como tudo deve ser"
+]
+
+/*
 const musics = ["Céu Azul",
     "Dias de Luta, Dias de Glória",
     "Só Os Loucos Sabem",
@@ -248,7 +254,7 @@ const musics = ["Céu Azul",
     "Provedor",
     "Tudo Igual"
 ]
-
+*/
 
 
 module.exports = {
