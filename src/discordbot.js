@@ -13,7 +13,6 @@ const channels = [];
 
 bot.login(keys.token)
 
-//set path=%path%;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin
 
 
 messageInterval(msgSend => {
@@ -56,7 +55,6 @@ const searchYT = search => {
             const firstResult = videos[0].url;
 
             resolve(firstResult);
-            // console.log( firstResult )
         })
     });
 
@@ -147,44 +145,24 @@ const play = async (guild, channel, voiceChannel, authorMention, sendMsg) => {
     playStatus[guild.id].song = song;
     playStatus[guild.id].playing = true;
 
+    if(sendMsg)
+        playingMsg(channel, song.title);
     
-
-    const streamMusic = ytdl(url, { filter: 'audioonly' });
-
-    const tmpFileName = path.join(__dirname, `./tmp/${guild.id}.tmp`);
-    if(fs.existsSync(tmpFileName))
-        fs.unlinkSync(tmpFileName);
-
-    streamMusic.pipe(fs.createWriteStream(tmpFileName));
-
-    streamMusic.on('end', () => {
-        if(sendMsg)
-            playingMsg(channel, song.title);
-            
-        const dispatcher = connection.playStream(fs.createReadStream(tmpFileName))
-            .on('end', () => {
-                log('Music ended!');
-                try {
-                    fs.unlinkSync(tmpFileName);
-                }
-                catch (err) {
-
-                }
-
-                if (playStatus[guild.id].playing)
-                    play(guild, channel, voiceChannel, authorMention);
-                else
-                    voiceChannel.leave();
-            })
-            .on('error', error => {
-                log(error);
-            });
+	const dispatcher = connection.playStream( ytdl(url, { filter: 'audioonly', quality: 'lowest' }))
+        .on('end', () => {
+            log('Music ended!');
+            if(playStatus[guild.id].playing)
+                play(guild, channel, voiceChannel, authorMention);
+            else
+                voiceChannel.leave();
+        })
+        .on('error', error => {
+            log(error);
+        });
 
         dispatcher.setVolumeLogarithmic(1);
-    })
-    .on('error', error => {
-        log(error);
-    });
+
+    return dispatcher;
 }
 
 function playingMsg(channel, title) {
