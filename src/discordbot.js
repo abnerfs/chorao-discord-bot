@@ -7,6 +7,7 @@ const fs = require('fs');
 const path = require('path');
 
 
+
 const { log, handleMessage, messageInterval, getMusic } = require('../src/controller');
 
 const channels = [];
@@ -148,9 +149,8 @@ const play = async (guild, channel, voiceChannel, authorMention, sendMsg) => {
     if(sendMsg)
         playingMsg(channel, song.title);
     
-	const dispatcher = connection.playStream( ytdl(url, { filter: 'audioonly', quality: 'lowest' }))
+	const dispatcher = connection.playStream( ytdl(url, { filter: 'audioonly' }))
         .on('end', () => {
-            log('Music ended!');
             if(playStatus[guild.id].playing)
                 play(guild, channel, voiceChannel, authorMention);
             else
