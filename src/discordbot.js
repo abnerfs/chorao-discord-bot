@@ -2,13 +2,16 @@ const { keys, prefix, music } = require('../config');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 const ytdl = require('ytdl-core');
-const ytSearch = require( 'yt-search' )
+const ytSearch = require('yt-search');
+const fs = require('fs');
+const path = require('path');
+
 
 const { log, handleMessage, messageInterval, getMusic } = require('../src/controller');
 
 const channels = [];
 
-bot.login(keys.token )
+bot.login(keys.token)
 
 //set path=%path%;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin
 
@@ -42,27 +45,27 @@ let playStatus = {
 
 const searchYT = search => {
     return new Promise((resolve, reject) => {
-        ytSearch(search, function ( err, r ) {
-            if ( err ) 
+        ytSearch(search, function (err, r) {
+            if (err)
                 reject(err);
-           
+
             const videos = r.videos
             const playlists = r.playlists
             const accounts = r.accounts
-           
+
             const firstResult = videos[0].url;
-            
+
             resolve(firstResult);
             // console.log( firstResult )
         })
     });
-   
+
 }
 
 const stopMusic = (message, authorMention) => {
     const guild = message.guild;
 
-    if(playStatus && playStatus[guild.id] && playStatus[guild.id].connection && playStatus[guild.id].connection.dispatcher) {
+    if (playStatus && playStatus[guild.id] && playStatus[guild.id].connection && playStatus[guild.id].connection.dispatcher) {
         playStatus[guild.id].playing = false;
         playStatus[guild.id].connection.dispatcher.end();
         return message.channel.send(`Parei a música...`);
@@ -77,13 +80,13 @@ const playMusic = async (message, authorMention) => {
     const guild = message.guild;
 
     const voiceChannel = message.member.voiceChannel;
-    if (!voiceChannel) 
+    if (!voiceChannel)
         return message.channel.send(`Você precisa ta em um canal de voz brother `);
 
-    if(playStatus && playStatus[guild.id] && playStatus[guild.id].playing) 
+    if (playStatus && playStatus[guild.id] && playStatus[guild.id].playing)
         return message.channel.send(`Ja ta tocando música`);
 
-      
+
     play(guild, message.channel, voiceChannel, authorMention, true);
 
 }
@@ -91,8 +94,8 @@ const playMusic = async (message, authorMention) => {
 
 const skipMusic = (message, authorMention) => {
     const guild = message.guild;
-    
-    if(playStatus && playStatus[guild.id] && playStatus[guild.id].connection && playStatus[guild.id].connection.dispatcher) {
+
+    if (playStatus && playStatus[guild.id] && playStatus[guild.id].connection && playStatus[guild.id].connection.dispatcher) {
         message.channel.send(`Próxima...`);
         playStatus[guild.id].connection.dispatcher.end();
         playStatus[guild.id].playing = false;
@@ -109,7 +112,7 @@ const currentMusic = (message, authorMention) => {
     const guild = message.guild;
 
 
-    if(playStatus && playStatus[guild.id] && playStatus[guild.id].connection && playStatus[guild.id].connection.dispatcher) {
+    if (playStatus && playStatus[guild.id] && playStatus[guild.id].connection && playStatus[guild.id].connection.dispatcher) {
         playingMsg(message.channel, playStatus[guild.id].song.title);
         return;
     }
@@ -130,37 +133,58 @@ const play = async (guild, channel, voiceChannel, authorMention, sendMsg) => {
     const randomMusic = getMusic();
 
     let url = await searchYT(randomMusic);
-    if(!url)
+    if (!url)
         return channel.send(`Tentei tocar ${randomMusic} mas não achei só cheirei.`);
 
     url = "https://www.youtube.com" + url;
 
     const songInfo = await ytdl.getInfo(url);
     const song = {
-		title: songInfo.title,
-		url: songInfo.video_url,
+        title: songInfo.title,
+        url: songInfo.video_url,
     };
-    
+
     playStatus[guild.id].song = song;
     playStatus[guild.id].playing = true;
 
-    if(sendMsg)
-        playingMsg(channel, song.title);
     
-	const dispatcher = connection.playStream( ytdl(url, { filter: 'audioonly' }))
-        .on('end', () => {
-            log('Music ended!');
-            voiceChannel.leave();
-            if(playStatus[guild.id].playing)
-                play(guild, channel, voiceChannel, authorMention);
-        })
-        .on('error', error => {
-            log(error);
-        });
+
+    const streamMusic = ytdl(url, { filter: 'audioonly' });
+
+    const tmpFileName = path.join(__dirname, `./tmp/${guild.id}.tmp`);
+    if(fs.existsSync(tmpFileName))
+        fs.unlinkSync(tmpFileName);
+
+    streamMusic.pipe(fs.createWriteStream(tmpFileName));
+
+    streamMusic.on('end', () => {
+        if(sendMsg)
+            playingMsg(channel, song.title);
+            
+        const dispatcher = connection.playStream(fs.createReadStream(tmpFileName))
+            .on('end', () => {
+                log('Music ended!');
+                try {
+                    fs.unlinkSync(tmpFileName);
+                }
+                catch (err) {
+
+                }
+
+                if (playStatus[guild.id].playing)
+                    play(guild, channel, voiceChannel, authorMention);
+                else
+                    voiceChannel.leave();
+            })
+            .on('error', error => {
+                log(error);
+            });
 
         dispatcher.setVolumeLogarithmic(1);
-
-    return dispatcher;
+    })
+    .on('error', error => {
+        log(error);
+    });
 }
 
 function playingMsg(channel, title) {
@@ -194,15 +218,15 @@ bot.on('message', msg => {
 
     const authorMention = `<@${author.id}>`;
 
-    if(music) {
+    if (music) {
         if (message.startsWith(`${prefix}play`)) {
             playMusic(msg, authorMention);
             return;
         }
-        else if(message.startsWith(`${prefix}stop`)) {
+        else if (message.startsWith(`${prefix}stop`)) {
             stopMusic(msg, authorMention);
         }
-        else if(message.startsWith(`${prefix}skip`)) {
+        else if (message.startsWith(`${prefix}skip`)) {
             skipMusic(msg, authorMention);
         }
         else if (message.startsWith(`${prefix}np`) || message.startsWith(`${prefix}current`)) {
