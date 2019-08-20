@@ -2,6 +2,8 @@ const random = require('random-number');
 
 const  { messagesInterval } = require('../config');
 const { delayedMessages, answersMention, musics } = require('./frases');
+const SEGUNDO = 1000;
+const MINUTO = 60 * SEGUNDO;
 
 /**
  * @param {string} search
@@ -66,7 +68,7 @@ const messageInterval = (sendMessage) => {
     }
 
     msgSend();
-    setInterval(msgSend, messagesInterval * 1000 * 60 );
+    setInterval(msgSend, messagesInterval * (10 * MINUTO));
 };
 
 
